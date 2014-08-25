@@ -6,3 +6,4 @@ pkg
 *.epub
 .rvmrc
 Gemfile.lock
+.ruby-version

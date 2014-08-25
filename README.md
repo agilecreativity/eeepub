@@ -1,3 +1,14 @@
+## EeePub (Temporary Extension)
+
+### Notes & Remarks
+
+Patch to the original gem that I need for my [source2epub](https://rubygems.org/gems/source2epub) gem to work.
+This gem will be deprecated as soon as the [rubyzip bug](https://github.com/jugyo/eeepub/pull/34) is fixed/merged by
+the original author. This is my temporary solution to make my gem work so that
+I can use the gem without the need to manually install my own fork first via Github.
+
+I still can't find the way to make use of the original gem name in the gemspec.
+
 EeePub
 ======
 

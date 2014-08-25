@@ -1,5 +1,4 @@
-require 'zip/zip'
-
+require 'zip'
 module EeePub
   # Class to create OCF
   class OCF
@@ -90,13 +89,12 @@ module EeePub
     # @param [String] output_path the output file path of ePub
     def save(output_path)
       output_path = File.expand_path(output_path)
-
       create_epub do
-        mimetype = Zip::ZipOutputStream::open(output_path) do |os|
-          os.put_next_entry("mimetype", nil, nil, Zip::ZipEntry::STORED, Zlib::NO_COMPRESSION)
+        mimetype = Zip::OutputStream::open(output_path) do |os|
+          os.put_next_entry("mimetype", nil, nil, Zip::Entry::STORED, Zlib::NO_COMPRESSION)
           os << "application/epub+zip"
         end
-        zipfile = Zip::ZipFile.open(output_path)
+        zipfile = Zip::File.open(output_path)
         Dir.glob('**/*').each do |path|
           zipfile.add(path, path)
         end
@@ -104,7 +102,7 @@ module EeePub
       end
       FileUtils.remove_entry_secure dir
     end
-    
+
     # Stream OCF
     #
     # @return [String] streaming output of the zip/epub file.
