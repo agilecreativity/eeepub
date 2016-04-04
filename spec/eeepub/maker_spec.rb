@@ -17,6 +17,7 @@ describe "EeePub::Maker" do
       ncx_file 'toc.ncx'
       opf_file 'content.opf'
       cover 'cover.jpg'
+      guide 'xxx'
       files ['foo.html', 'bar.html']
       nav [
         {:label => '1. foo', :content => 'foo.html'},
@@ -43,7 +44,6 @@ describe "EeePub::Maker" do
   }
 
   it 'should save' do
-    pending "TODO: this result in error, disable for now"
     stub(FileUtils).cp.with_any_args
     mock(Dir).mktmpdir { '/tmp' }
     mock(EeePub::NCX).new(
@@ -54,21 +54,23 @@ describe "EeePub::Maker" do
       ],
       :uid=>{:value=>"http://example.com/book/foo", :scheme=>"URL", :id=>"http://example.com/book/foo"}
     ) { stub!.save }
+
     mock(EeePub::OPF).new(
       :title => ["sample"],
+      :unique_identifier=>"http://example.com/book/foo",
+      :identifier => [{:value => "http://example.com/book/foo", :scheme => "URL", :id => "http://example.com/book/foo"}],
       :creator => ["jugyo"],
+      :publisher => ["jugyo.org"],
       :date => ["2010-05-06"],
       :language => ['en'],
       :subject => ['epub sample'],
       :description => ['this is epub sample'],
       :rights => ['xxx'],
-      :relation => ['xxx'],
-      :ncx => "toc.ncx",
       :cover => 'cover.jpg',
-      :publisher => ["jugyo.org"],
-      :unique_identifier=>"http://example.com/book/foo",
-      :identifier => [{:value => "http://example.com/book/foo", :scheme => "URL", :id => "http://example.com/book/foo"}],
-      :manifest => ['foo.html', 'bar.html']
+      :relation => ['xxx'],
+      :manifest => ['foo.html', 'bar.html'],
+      :ncx => "toc.ncx",
+      :guide => 'xxx'
     ) { stub!.save }
     mock(EeePub::OCF).new(
       :container => "content.opf",
@@ -90,6 +92,7 @@ describe "EeePub::Maker" do
         description 'this is epub sample'
         rights 'xxx'
         relation 'xxx'
+        guide 'xxx'
         identifier 'http://example.com/book/foo', :scheme => 'URL'
         uid 'http://example.com/book/foo'
         ncx_file 'toc.ncx'
@@ -104,7 +107,6 @@ describe "EeePub::Maker" do
     end
 
     it 'should save' do
-      pending "TODO: this result in error, disable for now"
       stub(FileUtils).cp.with_any_args
       stub(FileUtils).mkdir_p.with_any_args
       mock(Dir).mktmpdir { '/tmp' }
@@ -119,6 +121,7 @@ describe "EeePub::Maker" do
         :rights => ['xxx'],
         :relation => ['xxx'],
         :ncx => "toc.ncx",
+        :guide => 'xxx',
         :cover => 'cover.jpg',
         :publisher => ["jugyo.org"],
         :unique_identifier=>"http://example.com/book/foo",
@@ -126,6 +129,7 @@ describe "EeePub::Maker" do
         :manifest => ["foo/bar/foo.html", "foo/bar/baz/bar.html"]
       ) { stub!.save }
       mock(EeePub::OCF).new.with_any_args { stub!.save }
+
       @maker.save('test.epub')
     end
   end

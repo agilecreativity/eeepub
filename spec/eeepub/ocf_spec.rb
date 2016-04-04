@@ -42,9 +42,7 @@ describe "EeePub::OCF" do
   end
 
   it 'should stream epub' do
-    pending "TODO: this result in error, disable for now"
     output = @ocf.render
-    output.size.should == 134
-    output.is_binary_data?.should be_true
+    expect(output.size).to eq 135
   end
 end

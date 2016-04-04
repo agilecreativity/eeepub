@@ -91,7 +91,7 @@ module EeePub
       output_path = File.expand_path(output_path)
       create_epub do
         mimetype = Zip::OutputStream::open(output_path) do |os|
-          os.put_next_entry("mimetype", nil, nil, Zip::Entry::STORED, Zlib::NO_COMPRESSION)
+          os.put_next_entry("mimetype")
           os << "application/epub+zip"
         end
         zipfile = Zip::File.open(output_path)
@@ -115,15 +115,30 @@ module EeePub
     end
 
     private
+
     def create_epub
       FileUtils.chdir(dir) do
         meta_inf = 'META-INF'
         FileUtils.mkdir_p(meta_inf)
 
         container.save(File.join(meta_inf, 'container.xml'))
+        write_ibook_font_file(meta_inf)
         yield
       end
+    end
 
+    def write_ibook_font_file(meta_inf)
+      content = %Q|
+        <?xml version="1.0" encoding="UTF-8"?>
+        <display_options>
+          <platform name="*">
+            <option name="specified-fonts">true</option>
+          </platform>
+        </display_options>
+      |
+      File.open(File.join(meta_inf,'com.apple.ibooks.display-options.xml'),'w') do |file|
+        file.write(content.strip)
+      end
     end
   end
 end
